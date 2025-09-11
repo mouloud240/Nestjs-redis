@@ -1,6 +1,6 @@
 
-[![npm version](https://img.shields.io/npm/v/nestjs-redis.svg)](https://www.npmjs.com/package/nestjs-redis-client)
-[![npm downloads](https://img.shields.io/npm/dm/nestjs-redis.svg)](https://www.npmjs.com/package/nestjs-redis-client)
+[![npm version](https://img.shields.io/npm/v/nestjs-redis-client.svg)](https://www.npmjs.com/package/nestjs-redis-client)
+[![npm downloads](https://img.shields.io/npm/dm/nestjs-redis-client.svg)](https://www.npmjs.com/package/nestjs-redis-client)
 [![GitHub stars](https://img.shields.io/github/stars/mouloud240/Nestjs-redis.svg?style=social)](https://github.com/YOUR_GITHUB_USERNAME/nestjs-redis)
 [![GitHub issues](https://img.shields.io/github/issues/mouloud240/Nestjs-redis.svg)](https://github.com/YOUR_GITHUB_USERNAME/nestjs-redis/issues)
 [![License](https://img.shields.io/npm/l/nestjs-redis-client.svg)](LICENSE)
