@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-ioredis-client",
+  "name": "nestjs-redis-client",
   "version": "1.0.2",
   "description": "A reusable NestJS module for Redis integration.",
   "main": "dist/index.js",
