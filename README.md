@@ -10,13 +10,6 @@ A configurable NestJS module to integrate Redis, built on top of `ioredis`. This
 - Global module support.
 - A rich `RedisService` that covers most Redis commands for various data structures.
 
-## Installation
-
-```bash
-npm install ioredis
-```
-_(Assuming this library is part of your project, you only need `ioredis`)_
-
 ## Usage
 
 ### 1. Import the Module
