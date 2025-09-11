@@ -4,6 +4,13 @@
   "description": "A reusable NestJS module for Redis integration.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mouloud240/Nestjs-redis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mouloud240/Nestjs-redis/issues"
+  },
   "files": [
     "dist"
   ],
