@@ -26,10 +26,7 @@
     "ioredis"
   ],
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/your-username/nestjs-redis.git"
-  },
+  
   "peerDependencies": {
     "@nestjs/common": "^9 || ^10 || ^11"
   },

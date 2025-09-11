@@ -1,3 +1,9 @@
+
+[![npm version](https://img.shields.io/npm/v/nestjs-redis.svg)](https://www.npmjs.com/package/nestjs-redis)
+[![npm downloads](https://img.shields.io/npm/dm/nestjs-redis.svg)](https://www.npmjs.com/package/nestjs-redis)
+[![GitHub stars](https://img.shields.io/github/stars/YOUR_GITHUB_USERNAME/nestjs-redis.svg?style=social)](https://github.com/YOUR_GITHUB_USERNAME/nestjs-redis)
+[![GitHub issues](https://img.shields.io/github/issues/YOUR_GITHUB_USERNAME/nestjs-redis.svg)](https://github.com/YOUR_GITHUB_USERNAME/nestjs-redis/issues)
+[![License](https://img.shields.io/npm/l/nestjs-redis.svg)](LICENSE)
 # NestJS Redis Module
 
 A configurable NestJS module to integrate Redis, built on top of `ioredis`. This module provides a `RedisService` with a comprehensive set of methods to interact with your Redis server.
