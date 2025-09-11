@@ -1,6 +1,6 @@
 {
   "name": "nestjs-redis-client",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "A reusable NestJS module for Redis integration.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
