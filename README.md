@@ -15,6 +15,8 @@ A configurable NestJS module to integrate Redis, built on top of `ioredis`. This
 - Built on the robust and performant `ioredis` library.
 - Configurable using static `register` or dynamic `registerAsync` methods.
 - Global module support.
+- Built-in caching interceptor to cache method responses with customizable keys and TTLs.
+- Ai Autotuning of TTL per endpoint (coming very soon).
 - A rich `RedisService` that covers most Redis commands for various data structures.
 
 ## Usage
@@ -166,6 +168,11 @@ export class ProductController {
 
 ```
 
+### Headers 
+When using the interceptors you get usefull headers in the response to help you debug and understand the caching behavio:
+ -  **x-cache**: returns `HIT` if the response was served from cache, `MISS` if it was not cached, `ERROR` if an error occured ,or `BYPASS` if caching was bypassed (e.g., due to the `@NoCache` decorator).
+
+You can also bypass the cache on the client side by sending the header `cache-Control: no-cache` with your request.
 
 ### Global Interceptor Usage
 

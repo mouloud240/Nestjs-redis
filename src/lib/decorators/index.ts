@@ -1,4 +1,4 @@
-export * from './no-cache.decorator';
-export * from './cache-key.decorator';
-export * from './cache-ttl.decorator';
+export {NoCache} from './no-cache.decorator';
+export {CacheKey} from './cache-key.decorator';
+export {CacheTTL} from './cache-ttl.decorator';
 

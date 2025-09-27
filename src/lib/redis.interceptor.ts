@@ -68,7 +68,7 @@ export class CacheInterceptor implements NestInterceptor {
       context.getHandler(),
       context.getClass()
     ])
-    const noCacheHeader=request.headers['x-no-cache']
+    const noCacheHeader=request.headers['cache-control']?.toLowerCase()?.includes('no-cache') ? 'true':undefined;
     if(noCache || noCacheHeader==='true'){
       response.set('x-cache', 'BYPASS');
       return next.handle();
