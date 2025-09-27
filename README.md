@@ -118,6 +118,107 @@ export class MyService {
 }
 ```
 
+## Using the Interceptor
+
+The NestJS Redis Module includes a caching interceptor that automatically caches method responses based on configurable parameters.
+
+### Basic Usage
+
+To use the Redis interceptor in a controller or service method, apply the `@UseInterceptors()` decorator:
+
+```typescript
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { RedisCacheInterceptor } from './redis/redis-cache.interceptor'; // Adjust path as needed
+
+@Controller('users')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get(':id')
+  @UseInterceptors(RedisCacheInterceptor)
+  async getUser(@Param('id') id: string) {
+    // This response will be cached automatically
+    return this.userService.findById(id);
+  }
+}
+```
+
+### Custom Cache Configuration
+
+You can customize the cache behavior using the `@CacheKey` and `@CacheTTL` decorators:
+this is not recommended since we are going to autotune the ttl per endpoint using ai 
+
+```typescript
+import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { RedisCacheInterceptor, CacheKey, CacheTTL } from './redis'; // Adjust path as needed
+
+@Controller('products')
+export class ProductController {
+  @Get(':id')
+  @UseInterceptors(RedisCacheInterceptor)
+  @CacheKey('product') // Custom cache key prefix
+  @CacheTTL(7200) // Cache for 2 hours (in seconds)
+  async getProduct(@Param('id') id: string) {
+    return this.productService.findById(id);
+  }
+}
+
+```
+
+### Global Interceptor Usage
+
+To use the Redis interceptor globally across your entire application, you need to provide it using the `APP_INTERCEPTOR` token in your module:
+
+```typescript
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { RedisModule } from './redis/redis.module';
+import { RedisCacheInterceptor } from './redis/redis-cache.interceptor';
+
+@Module({
+  imports: [
+    RedisModule.register({
+      isGlobal: true,
+      host: 'localhost',
+      port: 6379,
+    }),
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: RedisCacheInterceptor,
+    },
+  ],
+})
+export class AppModule {}
+```
+
+### Conditional Caching
+
+You can conditionally enable/disable caching using the `@NoCache` decorator:
+
+```typescript
+import { Controller, Get, Post } from '@nestjs/common';
+import { NoCache } from './redis/decorators'; // Adjust path as needed
+
+@Controller('analytics')
+export class AnalyticsController {
+  @Get('stats')
+  // This will be cached (assuming global interceptor is enabled)
+  async getStats() {
+    return this.analyticsService.calculateStats();
+  }
+
+  @Post('track')
+  @NoCache() // This will bypass caching
+  async trackEvent(@Body() event: any) {
+    return this.analyticsService.trackEvent(event);
+  }
+}
+```
+
+
 ## API Reference
 
 `RedisService` provides a wide range of methods to interact with Redis. All methods that store complex data types (like objects or arrays) will automatically `JSON.stringify` them, and methods that retrieve them will `JSON.parse` them.
