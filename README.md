@@ -122,6 +122,7 @@ export class MyService {
 
 The NestJS Redis Module includes a caching interceptor that automatically caches method responses based on configurable parameters.
 
+To use the interceptor, you need to import the `RedisModule` on the scope of the usage unless the module is set to global.
 ### Basic Usage
 
 To use the Redis interceptor in a controller or service method, apply the `@UseInterceptors()` decorator:
@@ -164,6 +165,7 @@ export class ProductController {
 }
 
 ```
+
 
 ### Global Interceptor Usage
 
@@ -218,7 +220,23 @@ export class AnalyticsController {
 }
 ```
 
+Cache Invalidation
+The interceptor works seamlessly with the RedisService for manual cache invalidation:
+```typescript
+@Injectable()
+export class UserService {
+  constructor(private readonly redisService: RedisService) {}
 
+  async updateUser(id: string, userData: any) {
+    const updatedUser = await this.userRepository.update(id, userData);
+    
+    // Invalidate cached user data
+    await this.redisService.del(`user:${id}`);
+    
+    return updatedUser;
+  }
+}
+```
 ## API Reference
 
 `RedisService` provides a wide range of methods to interact with Redis. All methods that store complex data types (like objects or arrays) will automatically `JSON.stringify` them, and methods that retrieve them will `JSON.parse` them.

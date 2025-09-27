@@ -1,2 +1,5 @@
+import { SetMetadata } from "@nestjs/common";
+
 export const NO_CACHE_KEY='__no_cache__';
-export const NoCache=()=>Reflect.metadata(NO_CACHE_KEY,true);
+export const NoCache=()=>SetMetadata(NO_CACHE_KEY,true);
+

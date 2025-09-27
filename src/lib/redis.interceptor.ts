@@ -1,8 +1,12 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { RedisService } from './redis.service';
+import { Reflector } from '@nestjs/core';
 import * as crypto from 'crypto';
+import { NO_CACHE_KEY } from './decorators/no-cache.decorator';
+import { CACHE_KEY_KEY } from './decorators/cache-key.decorator';
+import { CACHE_TTL_KEY } from './decorators/cache-ttl.decorator';
 
 /**
  * Internal cache envelope type containing data and metadata
@@ -16,12 +20,15 @@ interface CacheEnvelope<T> {
 }
 
 @Injectable()
-export class RedisInterceptor implements NestInterceptor {
+export class CacheInterceptor implements NestInterceptor {
   private readonly TTL_SECONDS = 600; // 10 minutes
+  logger=new Logger(CacheInterceptor.name)
 
   constructor(
     private readonly redisService: RedisService,
+    private readonly reflector:Reflector
   ) {}
+
 
   /**
    * Generates a Redis cache key from request parameters
@@ -52,7 +59,25 @@ export class RedisInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
     
-    const cacheKey = this.generateCacheKey(request);
+    const isGetRequest = request.method === 'GET';
+    if (!isGetRequest) {
+      // Only cache GET requests
+      return next.handle();
+    }
+    const noCache=this.reflector.getAllAndOverride<Boolean>(NO_CACHE_KEY,[
+      context.getHandler(),
+      context.getClass()
+    ])
+    const noCacheHeader=request.headers['x-no-cache']
+    if(noCache || noCacheHeader==='true'){
+      response.set('x-cache', 'BYPASS');
+      return next.handle();
+    }
+
+    const overridenKey=this.reflector.getAllAndOverride<string|undefined>(CACHE_KEY_KEY,[
+      context.getHandler(),
+    ])
+    const cacheKey =overridenKey ? overridenKey: this.generateCacheKey(request);
 
     try {
       // Try to get cached response
@@ -77,16 +102,21 @@ export class RedisInterceptor implements NestInterceptor {
             };
             
             try {
-              await this.redisService.set(cacheKey, envelope, this.TTL_SECONDS);
+              const TTL=this.reflector.getAllAndOverride<number>(CACHE_TTL_KEY,[
+                context.getHandler(),
+                context.getClass()
+              ]) ?? this.TTL_SECONDS;
+              
+              await this.redisService.set(cacheKey, envelope, TTL);
             } catch (error) {
-              console.error('Failed to cache response:', error);
+              this.logger.error('Failed to cache response:', error);
             }
           })
         );
       }
     } catch (error) {
       // Redis error - fallback to original handler
-      console.error('Redis cache error:', error);
+      this.logger.error('Redis cache error:', error);
       response.set('x-cache', 'ERROR');
       
       return next.handle();
