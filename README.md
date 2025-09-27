@@ -220,8 +220,10 @@ export class AnalyticsController {
 }
 ```
 
-Cache Invalidation
+### Cache Invalidation
 The interceptor works seamlessly with the RedisService for manual cache invalidation:
+In here you are supposed to  use the custom key you genereated earlier with the @CacheKey decorator
+If you cannot part with eventual consistency issues and you need to invalidate the cache after each update , it would be better to handle it manually and set the route to @NoCache instead
 ```typescript
 @Injectable()
 export class UserService {
