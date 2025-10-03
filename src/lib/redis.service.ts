@@ -70,13 +70,13 @@ export class RedisService implements OnModuleInit {
     return data ? (JSON.parse(data) as T) : null;
   }
   async subscribe(
-    channel: string,
+    recChannel: string,
     callback: (message: string) => void | Promise<void>,
   ) {
     //TODO:fix this logi later it looks sussy
-    await this.subscriberClient.subscribe(channel);
+    await this.subscriberClient.subscribe(recChannel);
     this.subscriberClient.on('message', (channel, message) => {
-      if (channel === channel) {
+      if (recChannel=== channel) {
         void callback(message);
       }
     });
