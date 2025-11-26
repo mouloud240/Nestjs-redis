@@ -81,6 +81,11 @@ export class RedisService implements OnModuleInit {
     });
   
   }
+  /**
+   
+  *@description Unsubscribes from a specific Redis channel.
+  * @param recChannel The channel to unsubscribe from.
+  * **/
   async unsubscribe(
     recChannel: string,
   ) {
