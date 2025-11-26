@@ -21,7 +21,11 @@ export class RedisService implements OnModuleInit {
   }
   async onModuleInit() {
     this.logger.log('Flushing cached Redis database');
-    await this.cachedClient.flushdb();
+    //This willl be commented out until the persisten client is implemented
+    //await this.cachedClient.flushdb();
+  }
+  async flushClient(): Promise<void> {
+    await this.getClient().flushdb();
   }
 
   private getClient(): Redis {
