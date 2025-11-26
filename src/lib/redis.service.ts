@@ -73,15 +73,19 @@ export class RedisService implements OnModuleInit {
     recChannel: string,
     callback: (message: string) => void | Promise<void>,
   ) {
-    //TODO:fix this logi later it looks sussy
-    await this.subscriberClient.subscribe(recChannel);
+   await this.subscriberClient.subscribe(recChannel);
     this.subscriberClient.on('message', (channel, message) => {
       if (recChannel=== channel) {
         void callback(message);
       }
     });
+  
   }
-  //TODO:same for this
+  async unsubscribe(
+    recChannel: string,
+  ) {
+    await this.subscriberClient.unsubscribe(recChannel);
+  }
   async publish(
     channel: string,
     message: string,
