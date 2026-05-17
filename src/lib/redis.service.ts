@@ -21,7 +21,11 @@ export class RedisService implements OnModuleInit {
   }
   async onModuleInit() {
     this.logger.log('Flushing cached Redis database');
-    await this.cachedClient.flushdb();
+    //This willl be commented out until the persisten client is implemented
+    //await this.cachedClient.flushdb();
+  }
+  async flushClient(): Promise<void> {
+    await this.getClient().flushdb();
   }
 
   private getClient(): Redis {
@@ -70,18 +74,27 @@ export class RedisService implements OnModuleInit {
     return data ? (JSON.parse(data) as T) : null;
   }
   async subscribe(
-    channel: string,
+    recChannel: string,
     callback: (message: string) => void | Promise<void>,
   ) {
-    //TODO:fix this logi later it looks sussy
-    await this.subscriberClient.subscribe(channel);
+   await this.subscriberClient.subscribe(recChannel);
     this.subscriberClient.on('message', (channel, message) => {
-      if (channel === channel) {
+      if (recChannel=== channel) {
         void callback(message);
       }
     });
+  
   }
-  //TODO:same for this
+  /**
+   
+  *@description Unsubscribes from a specific Redis channel.
+  * @param recChannel The channel to unsubscribe from.
+  * **/
+  async unsubscribe(
+    recChannel: string,
+  ) {
+    await this.subscriberClient.unsubscribe(recChannel);
+  }
   async publish(
     channel: string,
     message: string,
