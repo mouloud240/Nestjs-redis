@@ -141,6 +141,32 @@ export class RedisService implements OnModuleInit {
   ): Promise<string[]> {
     return this.getClient().smembers(key);
   }
+  async zIncrBy(
+    key: string,
+    increment: number,
+    member: string,
+  ): Promise<string> {
+    return this.getClient().zincrby(key, increment, member);
+  }
+  async zScore(
+    key: string,
+    member: string,
+  ): Promise<string | null> {
+    return this.getClient().zscore(key, member);
+  }
+  async zCard(
+    key: string,
+  ): Promise<number> {
+    return this.getClient().zcard(key);
+  }
+  async zRange(
+    key: string,
+    start: number,
+    stop: number,
+  ): Promise<string[]> {
+    return this.getClient().zrange(key, start, stop);
+  }
+  async 
 
   async hIncrBy(
     key: string,
@@ -207,6 +233,12 @@ export class RedisService implements OnModuleInit {
       args.push(member.score, member.value);
     });
     return this.getClient().zadd(key, ...args);
+  }
+  async zRevRange(
+    key: string,
+    start: number,
+    stop: number,): Promise<string[]> {
+    return this.getClient().zrevrange(key, start, stop);
   }
 
   async zRevRangeWithScores(
